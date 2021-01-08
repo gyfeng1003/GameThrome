@@ -1,10 +1,7 @@
 # Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
 node_modules
 /dist
+.nuxt
 
 # Other files and folders
 .settings/

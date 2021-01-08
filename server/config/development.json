@@ -1,0 +1,5 @@
+{
+  "db": "mongodb://admin123:fgy123456@localhost:27017/adminManagement",
+  "port": 3000,
+  "base": "http://localhost:3000"
+}
