@@ -1,6 +1,5 @@
 
 module.exports = {
-  mode: 'universal',
   /*
   ** Headers of the page
   */
@@ -23,6 +22,10 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    {
+      src: 'static/less/base.less',
+      lang: 'less?indentedSyntax=true'
+    }
   ],
   /*
   ** Plugins to load before mounting the App

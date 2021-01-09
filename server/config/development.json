@@ -1,5 +1,14 @@
 {
-  "db": "mongodb://admin123:fgy123456@localhost:27017/adminManagement",
+  "db": "mongodb://admin:admin@localhost:27017/iceAndFile",
   "port": 3000,
-  "base": "http://localhost:3000"
+  "base": "http://localhost:3000",
+  "SITE_ROOT_URL": "",
+  "wechat": {
+    "appID": "wxe5ce57c2584f1f83",
+    "appSecret": "33babe6ad2d9320cfe6cb6d28fb6da5c",
+    "baseUrl": "测试微信的接入地址",
+    "token": "fgytoken"
+  }
 }
+
+

@@ -2,6 +2,12 @@
   <div class="container">
     <div>
       <logo />
+      <ul>
+        <li v-for="(data, index) in houses" :key="index">
+          {{data.name}}
+          <span @click="focusHouse(data)">查看详情</span>
+        </li>
+      </ul>
       <h1 class="title">
         GameThrome
       </h1>
@@ -29,11 +35,35 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import Logo from '~/components/Logo.vue'
 
 export default {
+  // middelware: "wechat-auth",
+  head () {
+    return {
+      title: '冰火脸谱'
+    }
+  },
   components: {
     Logo
+  },
+  beforeCreate () {
+    // 请求所有家族和主要人物
+    this.$store.dispatch('fetchHouses')
+    this.$store.dispatch('fetchCharacters')
+  },
+  computed: {
+    ...mapState([
+      "houses",
+      "characters"
+    ])
+  },
+  methods: {
+    focusHouse (item) {
+      // 路由跳转到house，附带查询参数id
+      this.$router.push({ path: '/house', query: { id: item._id } })
+    }
   }
 }
 </script>
@@ -68,5 +98,9 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+li span {
+  border-bottom: 1px solid #ff0000;
 }
 </style>
