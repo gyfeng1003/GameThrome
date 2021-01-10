@@ -16,9 +16,9 @@
       </h2>
       <div class="links">
         <a
-          href="https://nuxtjs.org/"
-          target="_blank"
+          href="javascript:void(0);"
           class="button--green"
+          @click="sdkAuthrization"
         >
           Documentation
         </a>
@@ -63,6 +63,10 @@ export default {
     focusHouse (item) {
       // 路由跳转到house，附带查询参数id
       this.$router.push({ path: '/house', query: { id: item._id } })
+    },
+    sdkAuthrization () {
+      console.log('----------')
+      this.$store.dispatch('wechatSignature')
     }
   }
 }

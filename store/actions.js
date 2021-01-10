@@ -26,5 +26,10 @@ export default {
 
     state.characters = res.data
     return res
+  },
+  
+  async wechatSignature () {
+    const res = await Services.wxSignature()
   }
+  
 }

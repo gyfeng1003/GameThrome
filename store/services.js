@@ -18,6 +18,10 @@ class Services {
   povCharacters (limit = 20) {
     return axios.get(`${baseUrl}/wiki/characters?limit=${limit}`)
   }
+  
+  wxSignature() {
+    return axios.get(`${baseUrl}/wechat/wechat-signature`)
+  }
 }
 
 export default new Services()
