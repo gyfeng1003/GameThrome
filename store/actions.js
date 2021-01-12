@@ -28,8 +28,8 @@ export default {
     return res
   },
   
-  async wechatSignature () {
-    const res = await Services.wxSignature()
+  getWechatSignature ({ commit }, url) {
+    return Services.getWechatSignature(url)
   }
   
 }
