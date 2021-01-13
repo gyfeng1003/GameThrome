@@ -23,4 +23,9 @@ export class WxController {
   console.log('info redirect')
   await wechat.redirect(ctx, next)
  }
+
+ @get('/wechat-oauth')
+ async wxOAuth (ctx, next) {
+   await wechat.oauth(ctx, next)
+ }
 }

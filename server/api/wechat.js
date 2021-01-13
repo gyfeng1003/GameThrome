@@ -21,3 +21,14 @@ export function getAuthorizeURL (...args) {
  return oauth.getAuthorizeURL(...args)
 }
 
+export async function getUserByCode (code) {
+  const oauth = getOAuth()
+
+  const data = await oauth.fetchAccessToken(code)
+  console.log('-----token', data);
+  
+  const openid = data.openid
+  const user = await oauth.getUserInfo(data.access_token, openid)
+
+  return user
+}

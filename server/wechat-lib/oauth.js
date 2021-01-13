@@ -30,7 +30,22 @@ export default class WechatOAuth {
   }
  
   async fetchAccessToken (code) {
+    console.log('----------fetchAccessToken');
+    
     const url = `${api.accessToken}appid=${this.appID}&secret=${this.appSecret}&code=${code}&grant_type=authorization_code`
+    const data = await this.request({url: url})
+
+    return data
+  }
+
+  // getUserInfo (token, openId, lang) {
+  //   const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang || 'zh_CN'}`
+  //   return {url: url}
+  // }
+
+  async getUserInfo (token, openID, lang='zh_CN') {
+    const url = `${api.userInfo}access_token=${token}&openid=${openID}&lang=${lang}`
+
     const data = await this.request({url: url})
 
     return data
