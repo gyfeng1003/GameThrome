@@ -11,7 +11,6 @@ function getUrlParam (param) {
 }
 
 export default {
-  // middleware: 'wechat-auth',
   head () {
     return {
       title: 'loading'

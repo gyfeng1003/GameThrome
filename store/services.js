@@ -52,6 +52,14 @@ class Services {
      return axios.get(`${baseUrl}/wechat-oauth?url=${encodeURIComponent(url)}`)
    }
 
+   /**
+    * @description: 查询单个家族详情
+    * @param {String} _id
+    * @return {Promise}
+    */
+   focusHouse (id) {
+     return axios.get(`${baseUrl}/wiki/houses/${id}`)
+   }
 }
 
 export default new Services()

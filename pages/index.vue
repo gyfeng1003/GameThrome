@@ -39,6 +39,7 @@ import {mapState} from 'vuex'
 import Logo from '~/components/Logo.vue'
 
 export default {
+  middleware: 'wechat-auth',
   head () {
     return {
       title: '冰火脸谱'
@@ -61,7 +62,7 @@ export default {
   methods: {
     focusHouse (item) {
       // 路由跳转到house，附带查询参数id
-      // this.$router.push({ path: '/oauth', query: { id: item._id } })
+      this.$router.push({ path: '/house', query: { id: item._id } })
     },
     sdkAuthrization () {
       console.log('----------')

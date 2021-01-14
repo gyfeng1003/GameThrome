@@ -1,5 +1,6 @@
 import config from "../config";
 import * as wechat from '../api/wechat'
+// import URL from 'url'
 import { parse as urlParse } from 'url'
 import { parse as queryParse } from 'querystring'
 
@@ -26,7 +27,7 @@ export async function redirect (ctx, next) {
  const {visit, id} = ctx.query
  const params = id ? `${visit}_${id}`: visit
  
- console.log('---------', redirect)
+ console.log('---------', params)
  const url = wechat.getAuthorizeURL(scope, redirect, params)
  
  ctx.redirect(url)
@@ -34,14 +35,15 @@ export async function redirect (ctx, next) {
 
 export async function oauth (ctx, next) {
   const url = ctx.query.url
+  // const urlObj = new URL(decodeURIComponent(url))
+  // const code = urlObj.searchParams.get('code')
   const urlObj = urlParse(decodeURIComponent(url))
   const params = queryParse(urlObj.query)
   const code = params.code
+  
   console.log('code-----', code);
   
   const user = await wechat.getUserByCode(code)
-
-  console.log('------');
   console.log(user)
   ctx.session = {
     openid: user.openid

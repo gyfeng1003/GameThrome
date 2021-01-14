@@ -9,7 +9,8 @@ const createStore = () => {
    houses: [],
    characters: [],
    authUser: null,
-   user: null
+   user: null,
+   focusHouse: {}
   },
   getters,
   actions,

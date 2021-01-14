@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-11 09:38:17
+ * @LastEditTime: 2021-01-14 17:56:54
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \GameThrome\server\routes\wiki.js
+ */
 import {controller, get, log} from '../decorator/router'
 import mongoose from 'mongoose'
 
@@ -31,5 +39,24 @@ export class WikiController {
     .exec()
     
     ctx.body = houses
+  }
+
+  @get('/houses/:_id')
+  @log
+  async getHouses(ctx, next) {
+    const { params } = ctx
+    const { _id } = params
+
+    if (!_id) return (ctx.body = '_id is required')
+
+    let house = await WikiHouse
+      .findById(_id)
+      .populate({
+        path: 'swornMembers.character',
+        select: 'name cname profile nmId'
+      })
+      .exec()
+
+    ctx.body = house
   }
 }
