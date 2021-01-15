@@ -1,5 +1,6 @@
 import { Route } from '../decorator/router'
 import { resolve } from 'path'
+import Router from 'koa-router'
 
 const r = path => resolve(__dirname, path)
 

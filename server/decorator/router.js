@@ -58,6 +58,8 @@ export class Route {
 
 
 export const router = conf => (target, key, descriptor) => {
+  console.log('---router', conf);
+  
   conf.path = normalizePath(conf.path)
 
   routersMap.set({

@@ -1,33 +1,30 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <ul>
-        <li v-for="(data, index) in houses" :key="index">
-          {{data.name}}
-          <span @click="focusHouse(data)">查看详情</span>
-        </li>
-      </ul>
-      <h1 class="title">
-        GameThrome
-      </h1>
-      <h2 class="subtitle">
-        My top-notch Nuxt.js project
-      </h2>
+    <div class="home">
+      <div class="house-content" v-for="(item, index) in houses" :key="index" @click="focusHouse(item)">
+        <div class="words">{{ item.words }}</div>
+        <div class="name">{{ item.name }}</div>
+        <div class="cname">{{ item.cname }}</div>
+      </div>
+      <div class="povCharacters">
+        <div class="title">主要人物</div>
+        <div class="povCharacter-wrapper">
+          <div class="povCharacter-content" v-for='(item, index) in characters' :key='index' @click='focusCharacters(item)'>
+            <div class="povCharacter-text">
+              <div class="cname">{{ item.cname }}</div>
+              <div class="name">{{ item.name }}</div>
+              <div class="playedBy">{{ item.playedBy }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="links">
         <a
           href="javascript:void(0);"
           class="button--green"
           @click="sdkAuthrization"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
+          SDK授权
         </a>
       </div>
     </div>
@@ -63,6 +60,10 @@ export default {
     focusHouse (item) {
       // 路由跳转到house，附带查询参数id
       this.$router.push({ path: '/house', query: { id: item._id } })
+    },
+    focusCharacters(item) {
+      // 路由跳转到Character，附带查询参数id
+      this.$router.push({ path: '/character', query: { id: item._id } })
     },
     sdkAuthrization () {
       console.log('----------')
@@ -104,39 +105,38 @@ export default {
 }
 </script>
 
-<style>
-.container {
+<style lang="less" scoped>
+ .container {
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-
-li span {
-  border-bottom: 1px solid #ff0000;
+  background: #f5f5f5;
+  .home {
+    width: 100%;
+    .house-content {
+      padding: 15px;
+      background: #fff;
+      text-align: left;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .povCharacters {
+      .title {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 0;
+      }
+      .povCharacter-wrapper {
+        .povCharacter-text {
+          text-align: left;
+          padding: 15px;
+          background: #fff;
+          border-bottom: 1px solid #f5f5f5;
+        }
+      }
+    }
+  }
 }
 </style>
