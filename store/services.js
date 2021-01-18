@@ -60,6 +60,14 @@ class Services {
    focusHouse (id) {
      return axios.get(`${baseUrl}/wiki/houses/${id}`)
    }
+
+   finishExam({openid, house, profession}) {
+     return axios.post('/api/exam', {
+       openid,
+       house,
+       profession
+     })
+   }
 }
 
 export default new Services()

@@ -33,7 +33,6 @@
 
 <script>
 import {mapState} from 'vuex'
-import Logo from '~/components/Logo.vue'
 
 export default {
   middleware: 'wechat-auth',
@@ -41,9 +40,6 @@ export default {
     return {
       title: '冰火脸谱'
     }
-  },
-  components: {
-    Logo
   },
   beforeCreate () {
     // 请求所有家族和主要人物

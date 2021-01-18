@@ -44,5 +44,14 @@ export default {
 
   setAuthUser ({ commit }, authUser) {
     commit('SET_AUTHUSER', authUser)
+  },
+
+  /**
+   * 测试完成获取结果
+   * @param {*} param0 
+   * @param {*} obj 
+   */
+  finishExam({state}, obj) {
+    return Services.finishExam(obj)
   }
 }

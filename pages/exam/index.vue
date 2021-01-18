@@ -1,56 +1,57 @@
 <template>
- <div class="exam-page">
-  <template v-for="(item, index) in question" v-show="index === step">
-   <div class="exam-main" :key="index">
-    <span class="exam-back" v-if="item.back" @click="changeStep(index-1)">
-      &lt; 上一步
-    </span>
-    <div class="exam-title">{{item.title}}</div>
-    <div class="exam-content">
-     <input type="text" v-if="item.input" v-model.trim="answer[item.inputKey]" @input='input'>
-     <div class="exam-content-button" v-for='(btn, i) in item.buttons' @click='chooseAnswer(btn.key, btn.val)' :key='i'>
-      {{ btn.prefix ? btn.prefix + ' ' + btn.val : btn.val }}
-     </div>
+<div class="container">
+  <div class="exam-background">
+    <div class="exam-main" v-for="(item, index) in question" v-show="index === step" :key="index">
+      <span class="exam-back" v-if="item.back" @click="changeStep(index-1)">
+        &lt; 上一步
+      </span>
+      <div class="exam-title">{{item.title}}</div>
+      <div class="exam-content">
+        <input type="text" class="exam-content-input" v-if="item.input" v-model.trim="answer[item.inputKey]" @input='input'>
+        <div class="exam-content-button" v-for='(btn, i) in item.buttons' @click='chooseAnswer(btn.key, btn.val)' :key='i'>
+          {{ btn.prefix ? btn.prefix + ' ' + btn.val : btn.val }}
+        </div>
+      </div>
     </div>
-   </div>
-  </template>
-  <div class="exam-result" v-show="step===3">
-   <transition name="rotate">
-    <img class="exam-vortex" v-if='animation.vortex' src="https://paio-cdn.visitshanghai.com.cn/international/popularize/picture/2021/01/07/BB79BF5D-CD2B-452D-9153-173777EE1498-1610014849063.png" alt="">
-   </transition>
-   <transition name="fade">
-    <span class="exam-sign" v-if="animation.word">正在穿越</span>
-   </transition>
-   <transition name="crawl">
-    <div class="exam-word" v-if='animation.card'>
-     <div style="background:red;"></div>
-     <span class="exam-card-title">
-       {{ answer.name }}.{{ answer.house }}.{{ answer.profession }}
-     </span>
-     <div class="exam-card-role">
-       你是{{ answer.house }}的{{ answer.profession }}
-     </div>
-     <div class="exam-card-content">{{ answer.intro }}</div>
+    <div class="exam-result" v-show="step===3">
+    <transition name="rotate">
+      <img class="exam-vortex" v-if='animation.vortex' src="https://paio-cdn.visitshanghai.com.cn/international/popularize/picture/2021/01/07/BB79BF5D-CD2B-452D-9153-173777EE1498-1610014849063.png" alt="">
+    </transition>
+    <transition name="fade">
+      <span class="exam-sign" v-if="animation.word">正在穿越</span>
+    </transition>
+    <transition name="crawl">
+      <div class="exam-word" v-if='animation.card'>
+      <div style="background:red;"></div>
+      <span class="exam-card-title">
+        {{ answer.name }}.{{ answer.house }}.{{ answer.profession }}
+      </span>
+      <div class="exam-card-role">
+        你是{{ answer.house }}的{{ answer.profession }}
+      </div>
+      <div class="exam-card-content">{{ answer.intro }}</div>
+      </div>
+    </transition>
+    <transition name="slide-top">
+      <div class="exam-download" v-if="animation.button" @click='previewImage'>
+      下载来分享
+      </div>
+    </transition>
     </div>
-   </transition>
-   <transition name="slide-top">
-    <div class="exam-download" v-if="animation.button" @click='previewImage'>
-     下载来分享
-    </div>
-   </transition>
   </div>
- </div>
+</div>
 </template>
 <script>
+import { asyncLoadJs } from '../../utils/index'
 import { mapState } from 'vuex'
 export default {
   middleware: 'wechat-auth',
   head () {
     return {
-      title: '穿越回冰火时代，你的结局是？',
-      script: [
-        { src: 'https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js' }
-      ]
+      title: '穿越回冰火时代，你的结局是？'
+      // script: [
+      //   { src: 'https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js' }
+      // ]
     }
   },
  data() {
@@ -114,7 +115,8 @@ export default {
      dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
      success: () => {}, // 用户确认分享后执行的回调函数
      cancel: () => {} // 用户取消分享后执行的回调函数
-   }
+   },
+   
   }
  },
  computed: {
@@ -125,16 +127,17 @@ export default {
  mounted () {
   const wx = window.wx
   const url = window.location.href
+  alert(url)
 
   this.shareOpts.desc = `${this.authUser ? this.authUser.nickname : '我'}在冰火中的结局竟然是...`
   this.shareOpts.link = url
-  this.shareOpts.imgUrl = `${this.imageCDN}images/exam-vortex.png`
+  this.shareOpts.imgUrl = `https://paio-cdn.visitshanghai.com.cn/international/picture/2020/08/25/658DBEF5-7BED-4F66-9132-898C82989976-1598351154430.jpg`
   
   this.$store.dispatch('getWechatSignature', url).then(res => {
      if (res.data.success === 1) {
        const params = res.data.params
        wx.config({
-         debug: false, // 调试模式
+         debug: true, // 调试模式
          appId: params.appId, // 公众号的唯一标识
          timestamp: params.timestamp, // 生成签名的时间戳
          nonceStr: params.noncestr, // 生成签名的随机串
@@ -155,19 +158,27 @@ export default {
      wx.onMenuShareAppMessage(this.shareOpts) // 分享给朋友
    })
    
-    // 播放背景音乐
-    // const music = new window.Howler({
-    //   src: [`/assets/bgmusic.mp3`],
-    //   loop: true,
-    //   volume: 1
-    // })
-    // // Clear listener after first call
-    // music.once('load', () => {
-    //   music.play()
-    // })
-    
+    asyncLoadJs('https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js').then(()=>{
+      // 播放背景音乐
+      const music = new window.Howl({
+        src: [`https://paio1.oss-cn-shanghai.aliyuncs.com/bgmusic.mp3`],
+        // src: ('../../assets/media/bgmusic.mp3'),
+        autoplay: true,
+        loop: true,
+        volume: 1,
+        onend: function() {
+          console.log('Finished!');
+        }
+      })
+     
+      // Clear listener after first call
+      music.once('load', () => {
+        music.play()
+      })
+    })
+  
     // 为文档根元素设置最小高度，防止输入框聚焦时 手机键盘上推而导致页面压缩
-    const rootEl = document.querySelector(".exam-page")
+    const rootEl = document.documentElement
     rootEl.style.minHeight = rootEl.getBoundingClientRect().height + 'px'
  },
  methods: {
@@ -251,11 +262,218 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.exam-page {
- position: absolute;
- top: 0;
- bottom: 0;
- left: 0;
- right: 0;
+.container {
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  position: absolute;
+}
+.exam-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  background: #e68434;
+  height: 100%;
+}
+.exam-main {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 2;
+  color: #fff;
+  .exam-back {
+    position: absolute;
+    left: 10%;
+    top: -30px;
+    z-index: 3;
+    font-size: 16px;
+  }
+  .exam-title {
+    margin-bottom: 10%;
+  }
+  .exam-content {
+    >*{
+      margin: auto;
+      height: 20px;
+      line-height: 20px;
+    }
+
+    .exam-content-input{
+      color: #000;
+      text-align: center;
+      margin-bottom: 5%;
+    }
+    .exam-content-warning {
+      animation: warning .3s linear;
+    }
+    .exam-content-button{
+      margin-top: 6%;
+      background: #e45396;
+      text-align: center;
+    }
+  }
+}
+.exam-result {
+  height: 100%;
+  padding-top: 7%;
+  position: relative;
+  > * {
+    width: 100%
+  }
+  .exam-vortex, .exam-sign {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: 0 0;
+  }
+  .exam-vortex {
+    width: 6.5rem !important;
+    height: 6.5rem;
+    z-index: 1;
+  }
+  .exam-sign {
+    font-size: 1.8em;
+    text-align: center;
+    color: #fff;
+    z-index: 2;
+  }
+  .exam-card{
+    width: 95% !important;
+    height: 80%;
+    position: relative;
+    z-index: 3;
+    padding: 10% 7%;
+    margin: auto;
+    transition: transform 5s;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    background: #a79bec;
+    background-size: 100% 100%;
+    border-radius: 1em;
+    box-shadow: 0 0 1.2em rgba(255, 255, 255, .5);
+    img {
+      display: block;
+      width: 75%;
+      margin: 0 auto .2rem;
+    }
+    .exam-card-title {
+      display: inline-block;
+      font-size: 1.5em;
+      border: .15em solid #e6b467;
+      outline: 1.5px solid #000;
+      padding: .2em .4em;
+      margin-bottom: .5em;
+      background: #000;
+      color: #fff;
+    }
+    .exam-card-role {
+      font-size: 2.7em;
+      font-weight: bold;
+    }
+    .exam-card-content {
+      font-size: 1.8em;
+      margin: .2em auto 0;
+    }
+  }
+  .exam-download {
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    font-size: 24px;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #fff;
+    background: #00ff00;
+  }
+}
+// animation of exam
+
+.rotate-enter-active {
+  animation: rotate 5s linear;
+}
+.rotate-leave-active {
+  animation: rotate 5s linear;
+  transition: opacity 3.5s;
+}
+.rotate-leave-to {
+  opacity: 0;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) translate(-50%, -50%)
+  }
+  50% {
+    transform: rotate(360deg) translate(-50%, -50%)
+  }
+  100% {
+    transform: rotate(720deg) translate(-50%, -50%)
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.slide-top-enter-active, .slide-top-leave-active {
+  transition: transform 1s cubic-bezier(.26, .01, .24, 1.74);
+}
+
+.slide-top-enter, .slide-top-leave-to {
+  bottom: -1.5rem;
+  transform: translateY(1.5rem);
+}
+
+.crawl-enter-active {
+  animation: crawl 6s cubic-bezier(.55,-.01, 0, 1.74);
+  transform-origin: 50% 50%;
+}
+
+@keyframes crawl {
+  0%{
+    transform: matrix(0, -.05, .05, 0, 0, 50);
+  }
+  30% {
+    transform: matrix(.4, -.5, .2, .4, 0, 30)
+  }
+  70% {
+    transform: matrix(.6, .5, -.5, .6, 0, 10)
+  }
+  100% {
+    transform: matrix(1, 0, 0, 1, 0, 0)
+  }
+}
+
+@keyframes warning {
+  0% {
+    transform: translateX(0);
+  }
+    
+  20% {
+    transform: translateX(-5%);
+  }
+    
+  40% {
+    transform: translateX(5%);
+  }
+    
+  60% {
+    transform: translateX(-2.5%);
+  }
+    
+  80% {
+    transform: translateX(2.5%);
+  }
+    
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>

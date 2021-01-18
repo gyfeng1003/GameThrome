@@ -34,6 +34,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~plugins/flexible.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules

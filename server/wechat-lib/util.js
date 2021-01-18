@@ -115,7 +115,13 @@ function sign (ticket, url) {
   const nonce = createNonce()
   const timestamp = createTimestamp()
   const signature = signIt(nonce, ticket, timestamp, url)
-
+  console.log('tiket:', ticket);
+  console.log('url:', url);
+  console.log('nonce:', nonce);
+  console.log('timestamp:', timestamp);
+  console.log('signature:', signature);
+  
+  
   return {
     noncestr: nonce,
     timestamp: timestamp,
