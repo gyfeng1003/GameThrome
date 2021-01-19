@@ -1,33 +1,32 @@
 <template>
   <div class="container">
-    <div class="home">
-      <div class="house-content" v-for="(item, index) in houses" :key="index" @click="focusHouse(item)">
-        <div class="words">{{ item.words }}</div>
-        <div class="name">{{ item.name }}</div>
-        <div class="cname">{{ item.cname }}</div>
-      </div>
-      <div class="povCharacters">
-        <div class="title">主要人物</div>
-        <div class="povCharacter-wrapper">
-          <div class="povCharacter-content" v-for='(item, index) in characters' :key='index' @click='focusCharacters(item)'>
-            <div class="povCharacter-text">
-              <div class="cname">{{ item.cname }}</div>
-              <div class="name">{{ item.name }}</div>
-              <div class="playedBy">{{ item.playedBy }}</div>
-            </div>
+    <div class="house-content" v-for="(item, index) in houses" :key="index" @click="focusHouse(item)">
+      <div class="words">{{ item.words }}</div>
+      <div class="name">{{ item.name }}</div>
+      <div class="cname">{{ item.cname }}</div>
+    </div>
+    <!-- <div class="povCharacters">
+      <div class="title">主要人物</div>
+      <div class="povCharacter-wrapper">
+        <div class="povCharacter-content" v-for='(item, index) in characters' :key='index' @click='focusCharacters(item)'>
+          <div class="povCharacter-text">
+            <div class="cname">{{ item.cname }}</div>
+            <div class="name">{{ item.name }}</div>
+            <div class="playedBy">{{ item.playedBy }}</div>
           </div>
         </div>
       </div>
-      <div class="links">
-        <a
-          href="javascript:void(0);"
-          class="button--green"
-          @click="sdkAuthrization"
-        >
-          SDK授权
-        </a>
-      </div>
+    </div> -->
+    <div class="links">
+      <a
+        href="javascript:void(0);"
+        class="button--green"
+        @click="sdkAuthrization"
+      >
+        SDK授权
+      </a>
     </div>
+    <div class="placeholder"></div>
   </div>
 </template>
 
@@ -64,6 +63,7 @@ export default {
     sdkAuthrization () {
       console.log('----------')
       const url = window.location.href
+      alert(url)
       this.$store.dispatch('getWechatSignature', url).then(res=>{
         if (res.data.success === 1) {
           const params = res.data.params
@@ -104,34 +104,48 @@ export default {
 <style lang="less" scoped>
  .container {
   margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
   background: #f5f5f5;
-  .home {
-    width: 100%;
-    .house-content {
-      padding: 15px;
-      background: #fff;
-      text-align: left;
-      border-bottom: 1px solid #f5f5f5;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: scroll;
+  .house-content {
+    padding: 15px;
+    background: #fff;
+    text-align: left;
+    border-bottom: 1px solid #f5f5f5;
+    box-sizing: border-box;
+  }
+  .povCharacters {
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 0;
     }
-    .povCharacters {
-      .title {
-        font-size: 18px;
-        font-weight: bold;
-        padding: 10px 0;
+    .povCharacter-wrapper {
+      .povCharacter-text {
+        text-align: left;
+        padding: 15px;
+        background: #fff;
+        border-bottom: 1px solid #f5f5f5;
       }
-      .povCharacter-wrapper {
-        .povCharacter-text {
-          text-align: left;
-          padding: 15px;
-          background: #fff;
-          border-bottom: 1px solid #f5f5f5;
-        }
-      }
+    }
+  }
+  .placeholder {
+    height: 1.5rem;
+  }
+  .links {
+    a {
+      display: inline-block;
+      height: 1rem;
+      line-height: 1rem;
+      width: 33%;
+      text-align: center;
+      background: #e76464;
     }
   }
 }

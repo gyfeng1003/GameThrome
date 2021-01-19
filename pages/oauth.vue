@@ -22,6 +22,9 @@ export default {
       const {data} = res
       console.log(data);
       if (data.success) {
+        localStorage.setItem('url', url)
+        // localStorage.setItem('code', getUrlParam('code'))
+        // localStorage.setItem('state', getUrlParam('state'))
         this.$store.dispatch('setAuthUser', data.user)
         const visit = '/' + getUrlParam('state')
         this.$router.replace(visit)

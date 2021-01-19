@@ -88,8 +88,9 @@ export default {
     text-decoration: none;
     > div {
       margin: auto;
+      height: 100%;
       img {
-        width: 100%;
+        width: 70%;
         height: 100%;
       }
     }

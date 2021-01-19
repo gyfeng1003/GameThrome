@@ -49,9 +49,6 @@ export default {
   head () {
     return {
       title: '穿越回冰火时代，你的结局是？'
-      // script: [
-      //   { src: 'https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js' }
-      // ]
     }
   },
  data() {
@@ -124,58 +121,58 @@ export default {
      'authUser'
    ])
  },
+ created() {
+    asyncLoadJs('https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js').then(()=>{
+      // 播放背景音乐
+      const music = new window.Howl({
+        src: [`https://paioe-cdn.visitshanghai.net/international/video/2021/01/19/487590F0-047E-489F-82C4-BF6745138A42-1611024535745.mp3`],
+        autoplay: true,
+        loop: true,
+        volume: 1
+      })
+     
+      // Clear listener after first call
+      music.once('load', () => {
+        console.log('load----');
+        music.play()
+      })
+    })
+ },
  mounted () {
   const wx = window.wx
-  const url = window.location.href
-  alert(url)
-
+  let url = window.location.href
+  if (!/(Android)/i.test(navigator.userAgent)) {
+    url = localStorage.getItem('url')
+  }
   this.shareOpts.desc = `${this.authUser ? this.authUser.nickname : '我'}在冰火中的结局竟然是...`
   this.shareOpts.link = url
   this.shareOpts.imgUrl = `https://paio-cdn.visitshanghai.com.cn/international/picture/2020/08/25/658DBEF5-7BED-4F66-9132-898C82989976-1598351154430.jpg`
   
   this.$store.dispatch('getWechatSignature', url).then(res => {
-     if (res.data.success === 1) {
-       const params = res.data.params
-       wx.config({
-         debug: true, // 调试模式
-         appId: params.appId, // 公众号的唯一标识
-         timestamp: params.timestamp, // 生成签名的时间戳
-         nonceStr: params.noncestr, // 生成签名的随机串
-         signature: params.signature, // 签名
-         jsApiList: [ 'previewImage', 'hideAllNonBaseMenuItem', 'showMenuItems' ]// 需要使用的JS接口列表: 预览图片接口，隐藏所有非基础按钮接口，批量显示功能按钮接口
-       })
-     }
-   })
+    if (res.data.success === 1) {
+      const params = res.data.params
+      wx.config({
+        debug: true, // 调试模式
+        appId: params.appId, // 公众号的唯一标识
+        timestamp: params.timestamp, // 生成签名的时间戳
+        nonceStr: params.noncestr, // 生成签名的随机串
+        signature: params.signature, // 签名
+      //  , 'hideAllNonBaseMenuItem', 'showMenuItems'previewImage
+        jsApiList: ['previewImage']// 需要使用的JS接口列表: 预览图片接口，隐藏所有非基础按钮接口，批量显示功能按钮接口
+      })
+    }
+  })
 
    wx.ready(() => {
      // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-     wx.hideAllNonBaseMenuItem()// 隐藏所有非基础按钮
-     wx.showMenuItems({
-       // 要显示的菜单项
-       menuList: [ 'menuItem:favorite', 'menuItem:share:appMessage', 'menuItem:share:timeline', 'menuItem:profile' ]
-     })
-     wx.onMenuShareTimeline(this.shareOpts) // 分享到朋友圈
-     wx.onMenuShareAppMessage(this.shareOpts) // 分享给朋友
+    //  wx.hideAllNonBaseMenuItem()// 隐藏所有非基础按钮
+    //  wx.showMenuItems({
+    //    // 要显示的菜单项
+    //    menuList: [ 'menuItem:favorite', 'menuItem:share:appMessage', 'menuItem:share:timeline', 'menuItem:profile' ]
+    //  })
+    //  wx.onMenuShareTimeline(this.shareOpts) // 分享到朋友圈
+    //  wx.onMenuShareAppMessage(this.shareOpts) // 分享给朋友
    })
-   
-    asyncLoadJs('https://cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js').then(()=>{
-      // 播放背景音乐
-      const music = new window.Howl({
-        src: [`https://paio1.oss-cn-shanghai.aliyuncs.com/bgmusic.mp3`],
-        // src: ('../../assets/media/bgmusic.mp3'),
-        autoplay: true,
-        loop: true,
-        volume: 1,
-        onend: function() {
-          console.log('Finished!');
-        }
-      })
-     
-      // Clear listener after first call
-      music.once('load', () => {
-        music.play()
-      })
-    })
   
     // 为文档根元素设置最小高度，防止输入框聚焦时 手机键盘上推而导致页面压缩
     const rootEl = document.documentElement
@@ -184,10 +181,10 @@ export default {
  methods: {
    previewImage () {
      // 预览图片
-     window.wx.previewImage({
-       current: this.previewImageUrl, // 当前显示图片的http链接
-       urls: [ this.previewImageUrl ] // 需要预览的图片http链接列表
-     })
+    //  window.wx.previewImage({
+    //    current: this.previewImageUrl, // 当前显示图片的http链接
+    //    urls: [ this.previewImageUrl ] // 需要预览的图片http链接列表
+    //  })
    },
    chooseAnswer (key, val) {
      // 点击下一步或者选择答案
@@ -264,9 +261,12 @@ export default {
 <style lang="less" scoped>
 .container {
   font-size: 20px;
-  position: relative;
   text-align: center;
   position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .exam-background {
   position: absolute;
