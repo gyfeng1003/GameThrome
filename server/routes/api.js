@@ -4,7 +4,7 @@ import {randomIntro} from '../libs/exam'
 import xss from 'xss'
 
 const ExamResult = mongoose.model('ExamResult')
-
+const User = mongoose.model('User')
 @controller('/api')
 export class DatabaseController {
   @post('/exam')
@@ -65,6 +65,17 @@ export class DatabaseController {
       }
     } catch(e) {
       ctx.throw(501, e)
+    }
+  }
+
+  async login (ctx, next) {
+    const {email, password} = ctx.request.body
+    try {
+      let user = await User.findOne({email}).exec()
+      let match = null
+      if (user) {
+        match = await user.comparePassword(password, user.password)
+      }
     }
   }
 }

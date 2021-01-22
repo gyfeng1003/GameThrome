@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Services from './services'
 
 export default {
@@ -53,5 +54,21 @@ export default {
    */
   finishExam({state}, obj) {
     return Services.finishExam(obj)
+  },
+
+  async login({commit}, {email, password}) {
+    try {
+      let res = await axios.post('/api/login', {
+        email,
+        password
+      })
+      let {data} = res
+      if (!data.ret) commit('SET_USER', data.user)
+      return data
+    } catch (e) {
+      if (e.response.status === 401) {
+        throw new Error('You can\'t do it')
+      }
+    }
   }
 }
