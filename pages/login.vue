@@ -7,11 +7,14 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="form">
+        <div class="form" v-if="!isQrcodeLogin">
           <input type="text" class="form-control" v-model='user.email'>
           <input type='password' class="form-control" v-model='user.password'>
           <button class="btn login-btn" @click='login'>登录</button>
         </div>
+        <div class="qrcode" v-else>二维码</div>
+        <div class="login-text" v-if="isQrcodeLogin" @click="switchLogin(false)">账号密码登录</div>
+        <div class="login-text" v-else @click="switchLogin(true)">二维码登录</div>
       </div>
     </div>
   </div>
@@ -21,10 +24,18 @@ export default {
   data () {
     return {
       openSnackbar: false,
-      user: {}
+      user: {},
+      isQrcodeLogin: false
     }
   },
   methods: {
+    switchLogin (qrcodeLogin) {
+      this.isQrcodeLogin = qrcodeLogin
+      if (qrcodeLogin) {
+        // 生成二维码图片
+        
+      }
+    },
     async login () {
       let { email, password } = this.user
 
@@ -48,6 +59,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.login-text {
+  text-align: right;
+  padding: 16px 0;
+  font-size: 18px;
+  cursor: pointer;
 }
 .card {
   width: 440px !important;
