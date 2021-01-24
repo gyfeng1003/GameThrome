@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto')
 // const bcrypt = require('bcrypt');
 
 const SALT_WORK_FACTOR = 10
@@ -72,31 +73,41 @@ UserSchema.pre('save', function (next) {
   next()
 })
 
-// UserSchema.pre('save', function (next) {
-//   var user = this
+UserSchema.pre('save', function (next) {
+  var user = this
 
-//   if (!user.isModified('password')) return next()
+  if (!user.isModified('password')) return next()
 
-//   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-//     if (err) return next(err)
-//     bcrypt.hash(user.password, salt, (error, hash) => {
-//       if (error) return next(error)
+  // bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
+  //   if (err) return next(err)
+  //   bcrypt.hash(user.password, salt, (error, hash) => {
+  //     if (error) return next(error)
 
-//       user.password = hash
-//       next()
-//     })
-//   })
-// })
+  //     user.password = hash
+  //     next()
+  //   })
+  // })
+  var hash = crypto.createHash('md5')
+  hash.update(user.password)
+  user.password = hash.digest('hex')
+  next()
+})
 
-// UserSchema.methods = {
-//   comparePassword: function (_password, password) {
-//     return new Promise((resolve, reject) => {
-//       bcrypt.compare(_password, password, function (err, isMatch) {
-//         if (!err) resolve(isMatch)
-//         else reject(err)
-//       })
-//     })
-//   },
+UserSchema.methods = {
+  comparePassword: function (_password, password) {
+    return new Promise((resolve, reject) => {
+      if (_password === password) {
+        resolve(true)
+      } else {
+        reject()
+      }
+      // bcrypt.compare(_password, password, function (err, isMatch) {
+      //   if (!err) resolve(isMatch)
+      //   else reject(err)
+      // })
+    })
+  }
+}
 
 //   incLoginAttempts: function (user) {
 //     var that = this

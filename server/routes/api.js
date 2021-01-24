@@ -67,7 +67,10 @@ export class DatabaseController {
       ctx.throw(501, e)
     }
   }
-
+  
+  @post("/login")
+  @log
+  @required({body: ['email', 'password']})
   async login (ctx, next) {
     const {email, password} = ctx.request.body
     try {
@@ -76,6 +79,27 @@ export class DatabaseController {
       if (user) {
         match = await user.comparePassword(password, user.password)
       }
+      if (match) {
+        let {_id, role, email, nickname, avatarUrl} = user
+        ctx.session.user = {
+          _id,
+          role,
+          email,
+          nickname,
+          avatarUrl
+        }
+        return ctx.body = {
+          ret: 0,
+          user: {email, nickname, avatarUrl},
+          msg: 'ok'
+        }
+      }
+      return ctx.body = {
+        ret: 1,
+        msg: 'USER.WRONG_PASSWORD'
+      }
+    }catch(e) {
+      throw new Error(e)
     }
   }
 }
