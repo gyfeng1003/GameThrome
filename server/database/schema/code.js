@@ -1,5 +1,3 @@
-const { required }=require("../../decorator/router");
-
 const mongoose = require('mongoose')
 const {Schema} = mongoose
 
@@ -10,4 +8,4 @@ const CodeSchema = new Schema({
  sessionKey: String
 })
 
-mongoose.model('code', CodeSchema)
+mongoose.model('Code', CodeSchema)

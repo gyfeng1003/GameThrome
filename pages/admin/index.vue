@@ -95,7 +95,7 @@ import * as R from 'ramda'
 import { find } from 'lodash'
 import axios from 'axios'
 export default {
-  // middleware: 'auth',
+  middleware: 'auth',
   layout: 'admin',
   head() {
     return {

@@ -8,6 +8,8 @@ import R from 'ramda'
 
 let reqID = 0
 const decorate = (args, middleware) => {
+  console.log('args-----', args);
+  
   let [ target, key, descriptor ] = args
 
   target[key] = isArray(target[key])
@@ -38,9 +40,6 @@ export class Route {
 
   init () {
     glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
-    _.forIn(routersMap, (value, key) => {
-      console.log(value, key)
-    })
 
     for (let [ conf, controller ] of routersMap) {
       const controllers = isArray(controller)

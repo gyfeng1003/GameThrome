@@ -19,13 +19,9 @@ export default {
   beforeMount () {
     const url = window.location.href
     this.$store.dispatch('getWechatOAuth', url).then(res=>{
-      const {data} = res
-      console.log(data);
-      if (data.success) {
+      if (res.success) {
         localStorage.setItem('url', url)
-        // localStorage.setItem('code', getUrlParam('code'))
-        // localStorage.setItem('state', getUrlParam('state'))
-        this.$store.dispatch('setAuthUser', data.user)
+        this.$store.dispatch('setAuthUser', res.user)
         const visit = '/' + getUrlParam('state')
         this.$router.replace(visit)
       } else {

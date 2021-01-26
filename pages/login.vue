@@ -7,12 +7,16 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="form" v-if="!isQrcodeLogin">
-          <input type="text" class="form-control" v-model='user.email'>
-          <input type='password' class="form-control" v-model='user.password'>
-          <button class="btn login-btn" @click='login'>登录</button>
+        <div class="form">
+          <template v-if="!isQrcodeLogin">
+            <input type="text" class="form-control" v-model='user.email'>
+            <input type='password' class="form-control" v-model='user.password'>
+            <button class="btn login-btn" @click='login'>登录</button>
+          </template>
+          <template v-else>
+            <div class="qrcode" id="j_qrcode" ></div>
+          </template>
         </div>
-        <div class="qrcode" v-else>二维码</div>
         <div class="login-text" v-if="isQrcodeLogin" @click="switchLogin(false)">账号密码登录</div>
         <div class="login-text" v-else @click="switchLogin(true)">二维码登录</div>
       </div>
@@ -20,6 +24,8 @@
   </div>
 </template>
 <script>
+import {count} from '~/utils'
+import adminApi from '~/request/admin-api'
 export default {
   data () {
     return {
@@ -33,7 +39,23 @@ export default {
       this.isQrcodeLogin = qrcodeLogin
       if (qrcodeLogin) {
         // 生成二维码图片
-        
+        adminApi.qrcode().then(res=>{
+          console.log('res---', res);
+          let codeElem = document.getElementById('j_qrcode')
+          new QRCode(codeElem, {
+            text: res.data.result,
+            width: 150,
+            height: 150,
+            colorDark: '#000000',
+            colorLight: '#ffffff'
+          })
+          // 判断二维码是否过期
+          count(29, function () {
+            // 二维码过期
+          })
+          // 轮询接口
+          // this.interval(res.data.result)
+        })
       }
     },
     async login () {
@@ -48,6 +70,23 @@ export default {
 
       console.log(res)
       if (!res.ret) this.$router.push('/admin')
+    },
+    interval(qrcode) {
+      // 获取token
+      adminApi.getTokenUser(qrcode).then(res=>{
+        let {status, sessionKey} = res.data
+        if (status === 0) {
+          adminApi.authCheck(null, {
+            headers: {
+              'x-session': sessionKey
+            }
+          }).then(response=>{
+            console.log('response----', response);
+          })
+        } else {
+          this.interval(qrcode)
+        }
+      })
     }
   }
 }
@@ -104,6 +143,9 @@ export default {
 .form {
   display: flex;
   flex-direction: column;
+  .qrcode {
+    margin: 0 auto;
+  }
 }
  
 .form-control {

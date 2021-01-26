@@ -1,22 +1,11 @@
 <template>
   <div class="container">
+    <img class="scan" src="~/static/images/scan.png" @click="handleScan">
     <div class="house-content" v-for="(item, index) in houses" :key="index" @click="focusHouse(item)">
       <div class="words">{{ item.words }}</div>
       <div class="name">{{ item.name }}</div>
       <div class="cname">{{ item.cname }}</div>
     </div>
-    <!-- <div class="povCharacters">
-      <div class="title">主要人物</div>
-      <div class="povCharacter-wrapper">
-        <div class="povCharacter-content" v-for='(item, index) in characters' :key='index' @click='focusCharacters(item)'>
-          <div class="povCharacter-text">
-            <div class="cname">{{ item.cname }}</div>
-            <div class="name">{{ item.name }}</div>
-            <div class="playedBy">{{ item.playedBy }}</div>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <div class="links">
       <a
         href="javascript:void(0);"
@@ -31,6 +20,7 @@
 </template>
 
 <script>
+import adminApi from '~/request/admin-api'
 import {mapState} from 'vuex'
 
 export default {
@@ -61,19 +51,17 @@ export default {
       this.$router.push({ path: '/character', query: { id: item._id } })
     },
     sdkAuthrization () {
-      console.log('----------')
-      const url = window.location.href
-      alert(url)
+      const url = localStorage.getItem('url')
       this.$store.dispatch('getWechatSignature', url).then(res=>{
-        if (res.data.success === 1) {
-          const params = res.data.params
+        if (res.success === 1) {
+          const params = res.params
           wx.config({
-            debug: true, // 调试模式
+            debug: false, // 调试模式
             appId: params.appId, // 公众号的唯一标识
             timestamp: params.timestamp, // 生成签名的时间戳
             nonceStr: params.noncestr, // 生成签名的随机串
             signature: params.signature, // 签名
-            jsApiList: [ 'chooseWXPay' ]// 需要使用的JS接口列表: 微信支付接口
+            jsApiList: [ 'chooseWXPay', 'scanQRCode' ]// 需要使用的JS接口列表: 微信支付接口
           })
           wx.ready(() => {
             // wx.chooseWXPay({
@@ -96,6 +84,23 @@ export default {
           })
         }
       })
+    },
+    handleScan() {
+      wx.scanQRCode({
+        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+        scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+        success: function (res) {
+          setTimeout(()=>{
+            var qrcodeStr = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+            adminApi.scanQrcode(qrcodeStr).then(result=>{
+              console.log('result-----', result);
+            })
+          }, 1000)
+        },
+        fail: res=>{
+          alert(JSON.stringify(res))
+        }
+      });
     }
   }
 }
@@ -113,6 +118,12 @@ export default {
   left: 0;
   right: 0;
   overflow-y: scroll;
+  img.scan {
+    width: 80px!important;
+    right: 30px;
+    position: fixed;
+    top: 30px;
+  }
   .house-content {
     padding: 15px;
     background: #fff;

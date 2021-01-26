@@ -23,3 +23,14 @@ export function asyncLoadJs(url, isForceLoad) {
     }
   })
 }
+
+export function count (num, callback) {
+  let _time = 0
+  let count = setInterval(()=>{
+    _time++
+    if (_time > num) {
+      callback();
+      clearInterval(count);
+    }
+  }, 1000)
+}

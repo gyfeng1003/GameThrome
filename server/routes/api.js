@@ -1,4 +1,4 @@
-import {controller, post, log, required} from '../decorator/router'
+import {controller, post, get, log, required} from '../decorator/router'
 import mongoose from 'mongoose'
 import {randomIntro} from '../libs/exam'
 import xss from 'xss'
@@ -102,5 +102,4 @@ export class DatabaseController {
       throw new Error(e)
     }
   }
-  
 }

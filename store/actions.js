@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '~/request'
 import Services from './services'
 
 export default {
@@ -16,22 +16,20 @@ export default {
  
   async fetchHouses ({ state }) {
     const res = await Services.allHouses()
-    state.houses = res.data
-
+    state.houses = res
     return res
   },
 
   async fetchCharacters ({ state }) {
     const res = await Services.povCharacters(500)
-
-    state.characters = res.data
+    state.characters = res
     return res
   },
 
   async focusHouse({ state }, _id) {
     if (_id === state.focusHouse._id) return
     const res = await Services.focusHouse(_id)    
-    state.focusHouse = res.data
+    state.focusHouse = res
     return res
   },
   
@@ -62,9 +60,8 @@ export default {
         email,
         password
       })
-      let {data} = res
-      if (!data.ret) commit('SET_USER', data.user)
-      return data
+      if (!res.ret) commit('SET_USER', res.user)
+      return res
     } catch (e) {
       if (e.response.status === 401) {
         throw new Error('You can\'t do it')

@@ -14,7 +14,8 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      { src: 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js' }
+      { src: 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js' },
+      { src: '/js/qrcode.min.js' }
     ]
   },
   /*
