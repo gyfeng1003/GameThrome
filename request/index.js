@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 axios.defaults.baseURL = ''
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 12000
 
 axios.interceptors.request.use(config=>{
   config.headers = {

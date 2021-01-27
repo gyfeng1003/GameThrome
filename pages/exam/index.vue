@@ -214,13 +214,14 @@ export default {
     }
    },
    async getResult () {
+     let {openid} = this.authUser
      const res = await this.$store.dispatch('finishExam', {
-       openid: this.authUser.openid,
-       house: this.answer.house,
-       profession: this.answer.profession
+       openid,
+       house: this.authUser.house,
+       profession: this.authUser.profession
      })
-     const { house, profession, imgUrl, intro } = res.data.data
-     if (res.data.success) {
+     const { house, profession, imgUrl, intro } = res.data
+     if (res.success) {
        this.answer.intro = `你是${house}的${profession}，${intro}`
        this.answer.imgUrl = imgUrl
        this.shareOpts.imgUrl = `${this.imageCDN}images/${imgUrl}`

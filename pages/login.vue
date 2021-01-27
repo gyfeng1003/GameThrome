@@ -43,7 +43,7 @@ export default {
           console.log('res---', res);
           let codeElem = document.getElementById('j_qrcode')
           new QRCode(codeElem, {
-            text: res.data.result,
+            text: res.result,
             width: 150,
             height: 150,
             colorDark: '#000000',
@@ -54,7 +54,7 @@ export default {
             // 二维码过期
           })
           // 轮询接口
-          // this.interval(res.data.result)
+          this.interval(res.result)
         })
       }
     },
@@ -74,12 +74,12 @@ export default {
     interval(qrcode) {
       // 获取token
       adminApi.getTokenUser(qrcode).then(res=>{
-        let {status, sessionKey} = res.data
+        let {status, sessionKey} = res
         if (status === 0) {
           adminApi.authCheck(null, {
-            headers: {
-              'x-session': sessionKey
-            }
+            // headers: {
+            //   'x-session': sessionKey
+            // }
           }).then(response=>{
             console.log('response----', response);
           })

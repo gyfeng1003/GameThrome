@@ -59,7 +59,8 @@ export class LoginController {
   @log
   async setSessionForCode(ctx, next) {
     const code = ctx.params.code
-    const sessionKey = ctx.get('x-session')
+    const sessionKey = ctx.session.openid
+    console.log('sessionKey----', sessionKey);
     await account.setSessionKeyForCode(code, sessionKey)
     ctx.body = {
       status: 0

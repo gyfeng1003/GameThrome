@@ -61,13 +61,17 @@ class Services {
      return axios.get(`${baseUrl}/wiki/houses/${id}`)
    }
 
+   /**
+    * 完成测试
+    * @param {} param0 
+    */
    finishExam({openid, house, profession}) {
-     return axios.post('/api/exam', {
-       openid,
-       house,
-       profession
-     })
-   }
+    return axios.post('/api/exam', {
+      openid,
+      house,
+      profession
+    })
+  }
 }
 
 export default new Services()
